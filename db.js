@@ -1,14 +1,15 @@
+require('dotenv').config();
 const mongoose = require('mongoose');
 
 async function getDatabase() {
   try {
-    await mongoose.connect('mongodb://127.0.0.1:27017/library', {
+    await mongoose.connect(process.env.MONGODB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    console.log('✅ Connected to Local MongoDB');
+    console.log('✅ Connected to MongoDB Atlas');
   } catch (err) {
-    console.error('❌ Local MongoDB Connection Error:', err.message);
+    console.error('❌ MongoDB Atlas Connection Error:', err.message);
   }
 }
 

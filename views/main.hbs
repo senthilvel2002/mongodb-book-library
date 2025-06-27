@@ -9,10 +9,29 @@
     <style>
         body {
             min-height: 100vh;
-            background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            position: relative;
+        }
+        /* Animated Gradient Background */
+        .animated-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 0;
+            background: linear-gradient(270deg, #74ebd5, #ACB6E5, #43cea2, #185a9d, #f7971e, #ffd200, #185a9d, #43cea2);
+            background-size: 1600% 1600%;
+            animation: moveGradient 18s ease-in-out infinite;
+            filter: blur(2px) brightness(1.08);
+        }
+        @keyframes moveGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .container {
+            position: relative;
+            z-index: 1;
         }
         .glass-card {
             background: rgba(255,255,255,0.2);
@@ -101,6 +120,7 @@
     </style>
 </head>
 <body>
+    <div class="animated-bg"></div>
     <div class="container" style="max-width: 600px;">
         <h1 class="main-title text-center">E-BOOK LIBRARY</h1>
 
