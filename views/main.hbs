@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOOK LIBRARY</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .glass-card {
+            background: rgba(255,255,255,0.2);
+            box-shadow: 0 8px 32px 0 rgba(31,38,135,0.37);
+            backdrop-filter: blur(8px);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.18);
+            padding: 2rem 2.5rem;
+            margin-bottom: 2rem;
+            animation: fadeInDown 0.8s;
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-40px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        .list-group-item {
+            background: rgba(255,255,255,0.7);
+            border: none;
+            margin-bottom: 0.5rem;
+            border-radius: 12px;
+            transition: box-shadow 0.2s, transform 0.2s;
+            box-shadow: 0 2px 8px rgba(44,62,80,0.07);
+        }
+        .list-group-item:hover {
+            box-shadow: 0 8px 24px rgba(44,62,80,0.13);
+            transform: translateY(-2px) scale(1.01);
+        }
+        .btn-animated {
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+        .btn-animated:hover {
+            transform: scale(1.08) rotate(-2deg);
+            box-shadow: 0 4px 16px rgba(44,62,80,0.13);
+        }
+        .form-control:focus {
+            box-shadow: 0 0 0 0.2rem rgba(116,235,213,0.25);
+        }
+        .alert {
+            animation: fadeIn 0.7s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0;}
+            to { opacity: 1;}
+        }
+        .main-title {
+            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #3a3a3a;
+            text-shadow: 0 2px 8px rgba(116,235,213,0.2);
+            margin-bottom: 2rem;
+        }
+        /* Flip card animation */
+        .flip-card {
+            background: transparent;
+            width: 100%;
+            height: 220px;
+            perspective: 1000px;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.7s cubic-bezier(.4,2,.6,1);
+            transform-style: preserve-3d;
+        }
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.85);
+            box-shadow: 0 4px 24px rgba(44,62,80,0.13);
+        }
+        .flip-card-front {
+            z-index: 2;
+        }
+        .flip-card-back {
+            transform: rotateY(180deg);
+            z-index: 3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" style="max-width: 600px;">
+        <h1 class="main-title text-center">E-BOOK LIBRARY</h1>
+
+        {{#if message}}
+            <div class="alert alert-success text-center">{{message}}</div>
+        {{/if}}
+
+        <div class="glass-card">
+            <div class="card-header bg-gradient text-white text-center" style="background: linear-gradient(90deg,#43cea2 0%,#185a9d 100%); border-radius: 12px;">
+                {{#if edit_id}} Edit Book {{else}} Add New Book {{/if}}
+            </div>
+            <div class="card-body">
+                <form method="post" action="{{#if edit_id}}/update_book/{{edit_id}}{{else}}/store_book{{/if}}">
+                    <div class="mb-3">
+                        <label class="form-label">Title</label>
+                        <input type="text" class="form-control" name="title" value="{{edit_book.title}}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Author</label>
+                        <input type="text" class="form-control" name="author" value="{{edit_book.author}}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" name="email" value="{{edit_book.email}}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Paste Story</label>
+                        <textarea class="form-control" name="story" rows="15" required>{{edit_book.story}}</textarea>
+                        <small class="form-text text-muted">You can paste a long story here. There is no page limit.</small>
+                    </div>
+                    <button type="submit" class="btn btn-success btn-animated w-100">{{#if edit_id}}Update{{else}}Create{{/if}}</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="glass-card">
+            <div class="text-center mb-2">
+                <img src="https://img.icons8.com/color/96/000000/books.png" alt="Books List" style="width:64px;height:64px;filter: drop-shadow(0 2px 8px rgba(44,62,80,0.13));">
+            </div>
+            <h3 class="mb-3 text-center">Books List</h3>
+            <div class="row g-4 justify-content-center">
+                {{#if books.length}}
+                    {{#each books}}
+                    <div class="col-12 col-md-6">
+                        <div class="flip-card">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front d-flex flex-column justify-content-center align-items-center p-3">
+                                    <img 
+                                      src="{{#if this.isbn}}https://covers.openlibrary.org/b/isbn/{{this.isbn}}-M.jpg{{else}}https://img.icons8.com/color/96/000000/book.png{{/if}}" 
+                                      alt="Book Cover" 
+                                      class="mb-2 rounded shadow" 
+                                      style="width:80px;height:110px;object-fit:cover;">
+                                    <strong>{{this.title}}</strong>
+                                    <span class="text-muted small mb-2">by {{this.author}}</span>
+                                </div>
+                                <div class="flip-card-back d-flex flex-column justify-content-center align-items-center p-3">
+                                    <p class="mb-2 text-muted"><em>Click "Download PDF" to get the story.</em></p>
+                                    <div class="mb-2">
+                                        <a href="/download_pdf/{{this._id}}" class="btn btn-primary btn-sm btn-animated" target="_blank">Download PDF</a>
+                                    </div>
+                                    <div>
+                                        <a href="/?edit_id={{this._id}}" class="btn btn-sm btn-warning btn-animated me-2">Edit</a>
+                                        <a href="/?delete_id={{this._id}}" class="btn btn-sm btn-danger btn-animated" onclick="return confirm('Are you sure you want to delete?')">Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{/each}}
+                {{else}}
+                    <!-- Example static books if none in DB -->
+                    <div class="col-12 col-md-6">
+                        <div class="flip-card">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front d-flex flex-column justify-content-center align-items-center p-3">
+                                    <img src="https://covers.openlibrary.org/b/isbn/9780439708180-M.jpg" alt="Book Cover" class="mb-2 rounded shadow" style="width:80px;height:110px;object-fit:cover;">
+                                    <strong>Harry Potter and the Sorcerer's Stone</strong>
+                                    <span class="text-muted small mb-2">by J.K. Rowling</span>
+                                </div>
+                                <div class="flip-card-back d-flex flex-column justify-content-center align-items-center p-3">
+                                    <p class="mb-2"><em>The first adventure of Harry Potter at Hogwarts.</em></p>
+                                    <div>
+                                        <button class="btn btn-sm btn-secondary btn-animated" disabled>Demo</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="flip-card">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front d-flex flex-column justify-content-center align-items-center p-3">
+                                    <img src="https://covers.openlibrary.org/b/isbn/9780439064873-M.jpg" alt="Book Cover" class="mb-2 rounded shadow" style="width:80px;height:110px;object-fit:cover;">
+                                    <strong>Harry Potter and the Chamber of Secrets</strong>
+                                    <span class="text-muted small mb-2">by J.K. Rowling</span>
+                                </div>
+                                <div class="flip-card-back d-flex flex-column justify-content-center align-items-center p-3">
+                                    <p class="mb-2"><em>The second year at Hogwarts brings new dangers.</em></p>
+                                    <div>
+                                        <button class="btn btn-sm btn-secondary btn-animated" disabled>Demo</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

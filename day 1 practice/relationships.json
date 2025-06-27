@@ -1,0 +1,253 @@
+library> use shop
+switched to db shop
+shop> db.customers.insertMany(
+... [
+... {name:'Manishankar'},
+... {name:'Giridharan'},
+... {name:'Vignesh Babu'}
+... ])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('685632f36667eba73f748a5f'),
+    '1': ObjectId('685632f36667eba73f748a60'),
+    '2': ObjectId('685632f36667eba73f748a61')
+  }
+}
+shop> db.customer_phones.insertMany(
+... [
+... {phone:"98383883933", customer_id: ObjectId("685632f36667eba73f748a5f")},
+... {phone:"89766777557", customer_id: ObjectId("685632f36667eba73f748a60")},
+... {phone:"97665765577", customer_id: ObjectId("685632f36667eba73f748a61")}])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('6856391d6667eba73f748a62'),
+    '1': ObjectId('6856391d6667eba73f748a63'),
+    '2': ObjectId('6856391d6667eba73f748a64')
+  }
+}
+shop> db.customers.find()
+[
+  { _id: ObjectId('685632f36667eba73f748a5f'), name: 'Manishankar' },
+  { _id: ObjectId('685632f36667eba73f748a60'), name: 'Giridharan' },
+  { _id: ObjectId('685632f36667eba73f748a61'), name: 'Vignesh Babu' }
+]
+shop> db.customers.aggregate([{$lookup: {from:'customer_phones', localField:'_id', foreignField: ''
+... db.customers.aggregate([{$lookup: {from:'customer_phones', localField:'_id', foreignField: ''
+... ])
+Uncaught:
+SyntaxError: Unexpected token, expected "," (2:0)
+
+  1 | db.customers.aggregate([{$lookup: {from:'customer_phones', localField:'_id', foreignField: ''
+> 2 | db.customers.aggregate([{$lookup: {from:'customer_phones', localField:'_id', foreignField: ''
+    | ^
+  3 | ])
+  4 |
+
+shop> db.customers.aggregate([{$lookup: {from:'customer_phones', localField:'_id', foreignField: 'customer_phones', as:'customer_phone'}}])
+[
+  {
+    _id: ObjectId('685632f36667eba73f748a5f'),
+    name: 'Manishankar',
+    customer_phone: []
+  },
+  {
+    _id: ObjectId('685632f36667eba73f748a60'),
+    name: 'Giridharan',
+    customer_phone: []
+  },
+  {
+    _id: ObjectId('685632f36667eba73f748a61'),
+    name: 'Vignesh Babu',
+    customer_phone: []
+  }
+]
+shop> db.customers.aggregate([{$lookup: {from:'customer_phones', localField:'_id', foreignField: 'customer_id', as:'customer_phone'}}])
+[
+  {
+    _id: ObjectId('685632f36667eba73f748a5f'),
+    name: 'Manishankar',
+    customer_phone: [
+      {
+        _id: ObjectId('6856391d6667eba73f748a62'),
+        phone: '98383883933',
+        customer_id: ObjectId('685632f36667eba73f748a5f')
+      }
+    ]
+  },
+  {
+    _id: ObjectId('685632f36667eba73f748a60'),
+    name: 'Giridharan',
+    customer_phone: [
+      {
+        _id: ObjectId('6856391d6667eba73f748a63'),
+        phone: '89766777557',
+        customer_id: ObjectId('685632f36667eba73f748a60')
+      }
+    ]
+  },
+  {
+    _id: ObjectId('685632f36667eba73f748a61'),
+    name: 'Vignesh Babu',
+    customer_phone: [
+      {
+        _id: ObjectId('6856391d6667eba73f748a64'),
+        phone: '97665765577',
+        customer_id: ObjectId('685632f36667eba73f748a61')
+      }
+    ]
+  }
+]
+shop> db.customers.find()
+[
+  { _id: ObjectId('685632f36667eba73f748a5f'), name: 'Manishankar' },
+  { _id: ObjectId('685632f36667eba73f748a60'), name: 'Giridharan' },
+  { _id: ObjectId('685632f36667eba73f748a61'), name: 'Vignesh Babu' }
+]
+shop> db.orders.insertMany([
+... {amount:100, customer_id: ObjectId('685632f36667eba73f748a5f')},
+... {amount:100, customer_id: ObjectId('685632f36667eba73f748a5f')},
+... {amount:85, customer_id: ObjectId('685632f36667eba73f748a5f')}
+... ])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('685643a36667eba73f748a65'),
+    '1': ObjectId('685643a36667eba73f748a66'),
+    '2': ObjectId('685643a36667eba73f748a67')
+  }
+}
+shop> db.orders.find()
+[
+  {
+    _id: ObjectId('685643a36667eba73f748a65'),
+    amount: 100,
+    customer_id: ObjectId('685632f36667eba73f748a5f')
+  },
+  {
+    _id: ObjectId('685643a36667eba73f748a66'),
+    amount: 100,
+    customer_id: ObjectId('685632f36667eba73f748a5f')
+  },
+  {
+    _id: ObjectId('685643a36667eba73f748a67'),
+    amount: 85,
+    customer_id: ObjectId('685632f36667eba73f748a5f')
+  }
+]
+shop> db.customers.aggregate([
+... {$lookup: {from:'orders', localField:'_id', foreignField:'customer_id',
+... as: "orders"}}])
+[
+  {
+    _id: ObjectId('685632f36667eba73f748a5f'),
+    name: 'Manishankar',
+    orders: [
+      {
+        _id: ObjectId('685643a36667eba73f748a65'),
+        amount: 100,
+        customer_id: ObjectId('685632f36667eba73f748a5f')
+      },
+      {
+        _id: ObjectId('685643a36667eba73f748a66'),
+        amount: 100,
+        customer_id: ObjectId('685632f36667eba73f748a5f')
+      },
+      {
+        _id: ObjectId('685643a36667eba73f748a67'),
+        amount: 85,
+        customer_id: ObjectId('685632f36667eba73f748a5f')
+      }
+    ]
+  },
+  {
+    _id: ObjectId('685632f36667eba73f748a60'),
+    name: 'Giridharan',
+    orders: []
+  },
+  {
+    _id: ObjectId('685632f36667eba73f748a61'),
+    name: 'Vignesh Babu',
+    orders: []
+  }
+]
+shop> db.products.insertMany(
+... [
+... {name:'Lamp'},
+... {name:'Lamp'},
+... {name:'Lamp'}
+... ]
+... }
+Uncaught:
+SyntaxError: Unexpected token, expected "," (7:0)
+
+  5 | {name:'Lamp'}
+  6 | ]
+> 7 | }
+    | ^
+  8 |
+
+shop> db.products.insertMany( [ {name:'Lamp'}, {name:'Mobile'}, {name:'Pencil'} ] })
+Uncaught:
+SyntaxError: Unexpected token, expected "," (1:76)
+
+> 1 | db.products.insertMany( [ {name:'Lamp'}, {name:'Mobile'}, {name:'Pencil'} ] })
+    |                                                                             ^
+  2 |
+
+shop> db.products.insertMany( [ {name:'Lamp'}, {name:'Mobile'}, {name:'Pencil'} ] )
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('6856da366667eba73f748a68'),
+    '1': ObjectId('6856da366667eba73f748a69'),
+    '2': ObjectId('6856da366667eba73f748a6a')
+  }
+}
+shop> db.products.update({'name':'Lamp'}, {$set:{name:'Light'}})
+DeprecationWarning: Collection.update() is deprecated. Use updateOne, updateMany, or bulkWrite.
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+shop> db.products.find()
+[
+  { _id: ObjectId('6856da366667eba73f748a68'), name: 'Light' },
+  { _id: ObjectId('6856da366667eba73f748a69'), name: 'Mobile' },
+  { _id: ObjectId('6856da366667eba73f748a6a'), name: 'Pencil' }
+]
+shop> db.orders.delete({})
+TypeError: db.orders.delete is not a function
+shop> db.orders.deleteMany({})
+{ acknowledged: true, deletedCount: 3 }
+shop> db.orders.find()
+
+shop> db.orders.insertOne({
+... amount:'100', customer_id: ObjectId('685632f36667eba73f748a5f'), product_ids: [ObjectId('6856da366667eba73f748a68'), ObjectId('6856da366667eba73f748a69'), ObjectId('6856da366667eba73f748a6a')]}
+... )
+{
+  acknowledged: true,
+  insertedId: ObjectId('6856de306667eba73f748a6b')
+}
+shop> db.orders.aggregate([{$lookup:{from:'products', localField:'product_ids', foreignField:'_id', as:'products'}}])
+[
+  {
+    _id: ObjectId('6856de306667eba73f748a6b'),
+    amount: '100',
+    customer_id: ObjectId('685632f36667eba73f748a5f'),
+    product_ids: [
+      ObjectId('6856da366667eba73f748a68'),
+      ObjectId('6856da366667eba73f748a69'),
+      ObjectId('6856da366667eba73f748a6a')
+    ],
+    products: [
+      { _id: ObjectId('6856da366667eba73f748a68'), name: 'Light' },
+      { _id: ObjectId('6856da366667eba73f748a69'), name: 'Mobile' },
+      { _id: ObjectId('6856da366667eba73f748a6a'), name: 'Pencil' }
+    ]
+  }
+]

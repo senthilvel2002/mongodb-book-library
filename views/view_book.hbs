@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{{book.title}} - Book Details</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container mt-5">
+    <h2>{{book.title}}</h2>
+    <p><strong>Author:</strong> {{book.author}}</p>
+    <p><strong>Email:</strong> {{book.email}}</p>
+    <hr>
+    <h4>Story</h4>
+    <pre style="white-space: pre-wrap;">{{book.story}}</pre>
+    <p class="mb-2 text-muted"><em>Click "View" to read the story.</em></p>
+    <a href="/download_pdf/{{book._id}}" class="btn btn-primary mt-3">Download as PDF</a>
+    <a href="/" class="btn btn-secondary mt-3">Back to Library</a>
+  </div>
+</body>
+</html>
