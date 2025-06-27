@@ -117,6 +117,54 @@
             transform: rotateY(180deg);
             z-index: 3;
         }
+        .footer-animated {
+            font-size: 1.1rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #43cea2, #185a9d, #ffd200, #f7971e, #43cea2);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+            letter-spacing: 1px;
+            animation: gradientMove 8s ease-in-out infinite, fadeInUp 1.2s;
+            display: inline-block;
+        }
+        @keyframes gradientMove {
+            0% {background-position: 0% 50%;}
+            50% {background-position: 100% 50%;}
+            100% {background-position: 0% 50%;}
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        .heart-beat {
+            color: #e25555;
+            animation: heartbeat 1.2s infinite;
+            display: inline-block;
+        }
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1);}
+            10%, 30%, 50%, 70%, 90% { transform: scale(1.15);}
+            20%, 40%, 60%, 80% { transform: scale(0.95);}
+        }
+        .social-animated {
+            margin-top: 8px;
+            animation: fadeInUp 1.5s;
+        }
+        .social-link {
+            display: inline-block;
+            margin: 0 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(44,62,80,0.10);
+        }
+        .social-link:hover {
+            transform: scale(1.25) rotate(-8deg);
+            box-shadow: 0 6px 24px rgba(44,62,80,0.18);
+            background: linear-gradient(135deg, #43cea2 0%, #185a9d 100%);
+        }
     </style>
 </head>
 <body>
@@ -230,5 +278,24 @@
             </div>
         </div>
     </div>
+
+    <footer class="text-center mt-4 mb-3">
+        <span class="footer-animated d-block mb-2">
+            MongoDB Library &mdash; Created with
+            <span class="heart-beat">&#10084;</span>
+            by <span style="font-style:italic;">@Senthilvel</span>
+        </span>
+        <div class="social-animated">
+            <a href="https://www.instagram.com/juicee_xent/" target="_blank" class="social-link" title="Instagram">
+                <img src="https://img.icons8.com/color/36/instagram-new.png" alt="Instagram"/>
+            </a>
+            <a href="https://www.linkedin.com/in/senthilvels2002/" target="_blank" class="social-link" title="LinkedIn">
+                <img src="https://img.icons8.com/color/36/linkedin.png" alt="LinkedIn"/>
+            </a>
+            <a href="https://github.com/senthilvel2002" target="_blank" class="social-link" title="GitHub">
+                <img src="https://img.icons8.com/ios-filled/36/000000/github.png" alt="GitHub"/>
+            </a>
+        </div>
+    </footer>
 </body>
 </html>
