@@ -127,7 +127,7 @@
             background-clip: text;
             text-fill-color: transparent;
             letter-spacing: 1px;
-            animation: gradientMove 8s ease-in-out infinite, fadeInUp 1.2s;
+            animation: gradientMove 8s ease-in-out infinite, fadeInUp 2s infinite;
             display: inline-block;
         }
         @keyframes gradientMove {
@@ -159,6 +159,11 @@
             transition: transform 0.3s, box-shadow 0.3s;
             border-radius: 50%;
             box-shadow: 0 2px 8px rgba(44,62,80,0.10);
+            animation: iconPulse 2.5s infinite;
+        }
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1);}
+            50% { transform: scale(1.15);}
         }
         .social-link:hover {
             transform: scale(1.25) rotate(-8deg);
